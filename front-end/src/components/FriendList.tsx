@@ -1,31 +1,21 @@
+import React, { useState } from 'react';
+
 import styled from '@emotion/styled';
 
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
 
-import { Grid } from '@mui/material';
-
-import Friend from './Friend';
-
-// type FriendProps = {
-//     username: string,
-// };
-
-// function Friend({ username }: FriendProps) {
-//     return (
-//         <div className='friend'>
-//             <div className='friend-icon'><AccountCircleOutlinedIcon /></div>
-//             <div className='friend-username'>{username}</div>
-//         </div>
-//     );
-// }
+import FriendContainer from '../containers/FriendContainer';
 
 type FriendListProps = {
   friends: Array<{ username: string }>;
+  clickAddFriend: (friend: { username: string }) => void;
 };
 
-function FriendList({ friends }: FriendListProps) {
-  const FriendContainer = styled(Grid)`
+function FriendList({ friends, clickAddFriend }: FriendListProps) {
+  const [open, setOpen] = useState(false);
+  const [newFriend, setNewFriend] = useState({ username: '' });
+  const FriendGridContainer = styled(Grid)`
     background-color: none;
 
     .add-friend {
@@ -38,17 +28,61 @@ function FriendList({ friends }: FriendListProps) {
     }
   `;
 
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewFriend((prev) => ({
+      ...prev,
+      username: e.target.value,
+    }));
+  };
+
+  const addFriend = (newFriend: { username: string }) => {
+    const idx = friends.findIndex((friend) => friend.username === newFriend.username);
+    if (idx < 0) {
+      clickAddFriend(newFriend);
+    }
+  };
+
+  const clickAdd = () => {
+    addFriend(newFriend);
+    closeDialog();
+  };
+
+  const closeDialog = () => {
+    setNewFriend({ username: '' });
+    setOpen(false);
+  };
+
   return (
-    <FriendContainer item xs={2}>
+    <FriendGridContainer item xs={2}>
       <div>Friend List</div>
-      {friends && friends.map((friend, idx) => <Friend key={idx} username={friend.username} />)}
-      <button className="add-friend">
+      {friends && friends.map((friend, idx) => <FriendContainer key={idx} username={friend.username} />)}
+      <button className="add-friend" onClick={() => setOpen(true)}>
         <div>
           <PersonAddIcon />
         </div>
         <div>Add friends</div>
       </button>
-    </FriendContainer>
+      <Dialog open={open} onClose={closeDialog}>
+        <DialogTitle>Add Friends</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            label="Enter Username"
+            type="text"
+            fullWidth
+            variant="standard"
+            onChange={onChange}
+            value={newFriend.username}
+          />
+          <DialogActions>
+            <Button onClick={closeDialog}>취소</Button>
+            <Button onClick={clickAdd}>추가</Button>
+          </DialogActions>
+        </DialogContent>
+      </Dialog>
+    </FriendGridContainer>
   );
 }
 

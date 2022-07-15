@@ -1,13 +1,12 @@
-import { Grid } from '@mui/material';
+import { Dialog, Grid } from '@mui/material';
 import { useCallback, useState } from 'react';
 
-import Header from './Header';
-import FriendList from './FriendList';
-import Chat from './Chat';
-
-type SelectedUser = {
-  username: string;
-};
+import Header from './components/Header';
+import FriendList from './components/FriendList';
+import Chat from './components/Chat';
+import { useSelector } from 'react-redux';
+import { RootState } from './modules';
+import FriendListContainer from './containers/FriendListContainer';
 
 type User = {
   username: string;
@@ -22,187 +21,17 @@ type User = {
 };
 
 function ChatApp() {
-  const [selectedUser, setSelectedUser] = useState<SelectedUser>({ username: 'user3' });
-  const [user, setUser] = useState<User>({
-    username: 'Me',
-    messages: {
-      user1: [
-        {
-          from: 'Me',
-          to: 'user1',
-          content: 'Hi, user1',
-        },
-        {
-          from: 'user1',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-      ],
-      user2: [
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content: 'Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-        {
-          from: 'Me',
-          to: 'user2',
-          content:
-            'Hi, user2 Hi, user2 Hi, user2 Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2Hi, user2',
-        },
-        {
-          from: 'user2',
-          to: 'Me',
-          content: 'Hi, Me',
-        },
-      ],
-      user3: [
-        // {
-        //     from: 'Me',
-        //     to: 'user3',
-        //     content: 'Hi, user3',
-        // },
-        // {
-        //     from: 'user3',
-        //     to: 'Me',
-        //     content: 'Hi, Me',
-        // },
-      ],
-    },
-    friends: [
-      {
-        username: 'user1',
-      },
-      {
-        username: 'user2',
-      },
-      {
-        username: 'user3',
-      },
-    ],
-  });
+  const selectedUser = useSelector((state: RootState) => state.friend);
+  const user = useSelector((state: RootState) => state.user);
 
   return (
-    <main style={{ backgroundColor: 'lavender' }}>
+    <main style={{ backgroundColor: 'lavender', height: '100vh' }}>
       <Header />
       <Grid container spacing={0}>
-        <FriendList friends={user.friends} />
-        <Chat selectedUser={selectedUser} username={user.username} messages={user.messages[selectedUser.username]} />
+        <FriendListContainer />
+        {selectedUser.username && (
+          <Chat selectedUser={selectedUser} username={user.username} messages={user.messages[selectedUser.username]} />
+        )}
       </Grid>
     </main>
   );

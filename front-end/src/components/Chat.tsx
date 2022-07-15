@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Grid } from '@mui/material';
 import classNames from 'classnames';
-import Friend from './Friend';
+import FriendContainer from '../containers/FriendContainer';
 
 type MessageProps = {
   fromMe: boolean;
@@ -17,7 +17,7 @@ function Message({ fromMe, content }: MessageProps) {
 }
 
 type ChatProps = {
-  selectedUser: { username: string } | null;
+  selectedUser: { username: string | null } | null;
   username: string;
   messages: Array<{
     from: string;
@@ -94,7 +94,7 @@ function Chat({ selectedUser, username, messages }: ChatProps) {
     <ChatContainer item xs={10}>
       <>
         <div className="chat-section-user">
-          {selectedUser && selectedUser.username && <Friend username={selectedUser.username} />}
+          {selectedUser && selectedUser.username && <FriendContainer username={selectedUser.username} />}
         </div>
         <div className="chat-section-contents">
           <>
@@ -103,9 +103,7 @@ function Chat({ selectedUser, username, messages }: ChatProps) {
               messages.map((messageInfo, idx) => (
                 <Message key={idx} fromMe={messageInfo.from === username} content={messageInfo.content} />
               ))}
-            {selectedUser && selectedUser.username && !messages?.length && [] && (
-              <div className="chat-section-content">메시지 기록이 없습니다.</div>
-            )}
+            {selectedUser && selectedUser.username && !messages?.length && <div>메시지 기록이 없습니다.</div>}
           </>
         </div>
         <div className="chat-section-inputs">
