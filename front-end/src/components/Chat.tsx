@@ -1,6 +1,13 @@
-import styled from '@emotion/styled';
-import { Grid } from '@mui/material';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import classNames from 'classnames';
+
+import { Grid } from '@mui/material';
+
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../modules';
+
 import FriendContainer from '../containers/FriendContainer';
 
 type MessageProps = {
@@ -17,17 +24,19 @@ function Message({ fromMe, content }: MessageProps) {
 }
 
 type ChatProps = {
-  selectedUser: { username: string | null } | null;
+  selectedFriend: { username: string };
   username: string;
   messages: Array<{
     from: string;
     to: string;
     content: string;
   }> | null;
+  addMessage: (friend: { username: string }, message: { from: string; to: string; content: string }) => void;
+  changeText: (value: string, name: string) => void;
 };
 
-function Chat({ selectedUser, username, messages }: ChatProps) {
-  const ChatContainer = styled(Grid)`
+function Chat({ selectedFriend, username, messages, addMessage, changeText }: ChatProps) {
+  const chatStyle = css`
     background-color: white;
     height: 95vh;
     /* overflow-y: scroll; */
@@ -68,6 +77,7 @@ function Chat({ selectedUser, username, messages }: ChatProps) {
           border: 3px solid lightgray;
           border-radius: 15px;
           max-width: 500px;
+          white-space: pre;
         }
       }
 
@@ -89,29 +99,53 @@ function Chat({ selectedUser, username, messages }: ChatProps) {
       }
     }
   `;
+  const messageInput = useSelector((state: RootState) => state.inputs.chat_message);
+
+  const handleClick = () => {
+    if (messageInput) {
+      const newMessage = {
+        from: username,
+        to: selectedFriend.username,
+        content: messageInput.value,
+      };
+      addMessage(selectedFriend, newMessage);
+      changeText('', messageInput.name);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleClick();
+    }
+  };
 
   return (
-    <ChatContainer item xs={10}>
+    <Grid css={chatStyle} item xs={10}>
       <>
         <div className="chat-section-user">
-          {selectedUser && selectedUser.username && <FriendContainer username={selectedUser.username} />}
+          {selectedFriend.username && <FriendContainer username={selectedFriend.username} />}
         </div>
         <div className="chat-section-contents">
           <>
-            {selectedUser &&
-              messages &&
+            {messages &&
               messages.map((messageInfo, idx) => (
                 <Message key={idx} fromMe={messageInfo.from === username} content={messageInfo.content} />
               ))}
-            {selectedUser && selectedUser.username && !messages?.length && <div>메시지 기록이 없습니다.</div>}
+            {selectedFriend.username && !messages?.length && <div>메시지 기록이 없습니다.</div>}
           </>
         </div>
         <div className="chat-section-inputs">
-          <textarea className="message-input" />
-          <button>보내기</button>
+          <textarea
+            className="message-input"
+            value={messageInput.value}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => changeText(e.target.value, messageInput.name)}
+            onKeyDown={handleKeyDown}
+          />
+          <button onClick={handleClick}>보내기</button>
         </div>
       </>
-    </ChatContainer>
+    </Grid>
   );
 }
 

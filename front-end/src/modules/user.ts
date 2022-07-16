@@ -1,27 +1,29 @@
 import produce from 'immer';
 
 const ADD_FRIEND = 'user/ADD_FRIEND' as const;
+const ADD_MESSAGE = 'user/ADD_MESSAGE' as const;
 
 type Friend = {
   username: string;
 };
 
-export const addFriend = (friend: Friend) => ({ type: ADD_FRIEND, payload: friend });
+type Message = {
+  from: string;
+  to: string;
+  content: string;
+};
 
-type UserAction = ReturnType<typeof addFriend>;
+export const addFriend = (friend: Friend) => ({ type: ADD_FRIEND, payload: friend });
+export const addMessage = (friend: Friend, message: Message) => ({ type: ADD_MESSAGE, payload: { friend, message } });
+
+type UserAction = ReturnType<typeof addFriend> | ReturnType<typeof addMessage>;
 
 type UserState = {
   username: string;
   messages: {
-    [arg0: string]: Array<{
-      from: string;
-      to: string;
-      content: string;
-    }>;
+    [arg0: string]: Array<Message>;
   };
-  friends: Array<{
-    username: string;
-  }>;
+  friends: Array<Friend>;
 };
 
 const initialState = {
@@ -192,6 +194,11 @@ function user(state: UserState = initialState, action: UserAction): UserState {
     case ADD_FRIEND:
       return produce(state, (draft) => {
         draft.friends.push(action.payload);
+        draft.messages[action.payload.username] = [];
+      });
+    case ADD_MESSAGE:
+      return produce(state, (draft) => {
+        draft.messages[action.payload.friend.username].push(action.payload.message);
       });
     default:
       return state;

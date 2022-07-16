@@ -1,13 +1,11 @@
-import React from 'react';
-
 const SELECT = 'friend/SELECT' as const;
 
-export const select = (username: string | null) => ({ type: SELECT, payload: username });
+export const select = (username: string) => ({ type: SELECT, payload: username });
 
 type FriendAction = ReturnType<typeof select>;
 
 type FriendState = {
-  username: string | null;
+  username: string;
 };
 
 const initialState = {

@@ -1,13 +1,16 @@
-import styled from '@emotion/styled';
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
 import { Avatar } from '@mui/material';
 
+import React from 'react';
+
 type FriendProps = {
-  username: string | null;
-  selectFriend: (username: string | null) => void;
+  username: string;
+  selectFriend: (username: string) => void;
 };
 
 function Friend({ username, selectFriend }: FriendProps) {
-  const FriendContainer = styled.div`
+  const friendStyle = css`
     display: flex;
     align-items: center;
     padding: 0 10px;
@@ -53,15 +56,15 @@ function Friend({ username, selectFriend }: FriendProps) {
   }
 
   return (
-    <FriendContainer>
-      <div className="friend-icon">
-        {/* <AccountCircleOutlinedIcon /> */}
-        {username && <Avatar {...stringAvatar(username)} />}
-      </div>
-      <div className="friend-username" onClick={(e) => selectFriend(e.currentTarget.textContent)}>
+    <div css={friendStyle}>
+      <div className="friend-icon">{username && <Avatar {...stringAvatar(username)} />}</div>
+      <div
+        className="friend-username"
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => selectFriend(e.currentTarget.innerHTML)}
+      >
         {username}
       </div>
-    </FriendContainer>
+    </div>
   );
 }
 
