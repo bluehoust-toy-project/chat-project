@@ -2,7 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="shortcut icon" href="/favicon/p0.png?" type="image/x-icon">
+    <link id= "favicon" rel="icon" href="#" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Web site created using create-react-app" />
@@ -21,7 +22,21 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Chat App</title>
+
+    <script>
+      // Set up moving favicon
+        const faviconRoute = '/favicon/';
+        const faviconNames = ['p0.png', 'p1.png', 'p2.png', 'p3.png', 'p4.png',
+                        'p5.png', 'p6.png', 'p7.png', 'p8.png', 'p9.png'];
+        let idx = 0;
+        setInterval(() => {
+            document.querySelector("#favicon").setAttribute('href', faviconRoute + faviconNames[idx++]);
+            idx %= faviconNames.length;
+
+        }, 10)
+    </script>
+
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
