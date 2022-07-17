@@ -1,8 +1,8 @@
-const SELECT = 'friend/SELECT' as const;
+const SELECT_FRIEND = 'friend/SELECT_FRIEND' as const;
 
-export const select = (username: string) => ({ type: SELECT, payload: username });
+export const selectFriend = (username: string) => ({ type: SELECT_FRIEND, payload: username });
 
-type FriendAction = ReturnType<typeof select>;
+type FriendAction = ReturnType<typeof selectFriend>;
 
 type FriendState = {
   username: string;
@@ -14,7 +14,7 @@ const initialState = {
 
 function friend(state: FriendState = initialState, action: FriendAction): FriendState {
   switch (action.type) {
-    case SELECT:
+    case SELECT_FRIEND:
       return {
         ...state,
         username: action.payload,

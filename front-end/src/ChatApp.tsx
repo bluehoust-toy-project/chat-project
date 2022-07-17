@@ -1,19 +1,24 @@
 import { Grid } from '@mui/material';
 
-import FriendListContainer from './containers/FriendListContainer';
-import ChatContainer from './containers/ChatContainer';
-import HeaderContainer from './containers/HeaderContainer';
+import { useSelector } from 'react-redux';
+import { RootState } from './modules';
 
-function ChatApp() {
+import Header from './components/Header';
+import FriendList from './components/FriendList';
+import Chat from './components/Chat';
+
+const ChatApp = () => {
+  const friends = useSelector((state: RootState) => state.user.friends);
+
   return (
     <main style={{ backgroundColor: 'lavender', height: '100vh' }}>
-      <HeaderContainer />
+      <Header />
       <Grid container spacing={0}>
-        <FriendListContainer />
-        <ChatContainer />
+        <FriendList friends={friends} />
+        <Chat />
       </Grid>
     </main>
   );
-}
+};
 
 export default ChatApp;

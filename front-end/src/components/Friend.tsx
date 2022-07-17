@@ -3,34 +3,20 @@ import { css } from '@emotion/react';
 import { Avatar } from '@mui/material';
 
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { selectFriend } from '../modules/friend';
 
-type FriendProps = {
+interface FriendProps {
   username: string;
-  selectFriend: (username: string) => void;
-};
+}
 
-function Friend({ username, selectFriend }: FriendProps) {
-  const friendStyle = css`
-    display: flex;
-    align-items: center;
-    padding: 0 10px;
-    margin: 5px 0;
-
-    .friend-icon {
-      margin: 0 10px;
-    }
-
-    .friend-username {
-      font-size: 1.3rem;
-      cursor: pointer;
-    }
-  `;
+const Friend = ({ username }: FriendProps) => {
+  const dispatch = useDispatch();
 
   function stringToColor(string: string) {
     let hash = 0;
     let i;
 
-    /* eslint-disable no-bitwise */
     for (i = 0; i < string.length; i += 1) {
       hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
@@ -41,7 +27,6 @@ function Friend({ username, selectFriend }: FriendProps) {
       const value = (hash >> (i * 8)) & 0xff;
       color += `00${value.toString(16)}`.slice(-2);
     }
-    /* eslint-enable no-bitwise */
 
     return color;
   }
@@ -57,15 +42,25 @@ function Friend({ username, selectFriend }: FriendProps) {
 
   return (
     <div css={friendStyle}>
-      <div className="friend-icon">{username && <Avatar {...stringAvatar(username)} />}</div>
+      <div style={{ margin: '0 10px' }}>
+        <Avatar {...stringAvatar(username)} />
+      </div>
       <div
+        style={{ fontSize: '1.3rem', cursor: 'pointer' }}
         className="friend-username"
-        onClick={(e: React.MouseEvent<HTMLDivElement>) => selectFriend(e.currentTarget.innerHTML)}
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => dispatch(selectFriend(e.currentTarget.innerHTML))}
       >
         {username}
       </div>
     </div>
   );
-}
+};
+
+const friendStyle = css`
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  margin: 5px 0;
+`;
 
 export default Friend;
