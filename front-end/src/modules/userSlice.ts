@@ -1,33 +1,29 @@
-import produce from 'immer';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const ADD_FRIEND = 'user/ADD_FRIEND' as const;
-const ADD_MESSAGE = 'user/ADD_MESSAGE' as const;
-
-type Friend = {
-  username: string;
-};
-
-type Message = {
+export interface MessageState {
   from: string;
   to: string;
   content: string;
-};
+}
 
-export const addFriend = (friend: Friend) => ({ type: ADD_FRIEND, payload: friend });
-export const addMessage = (friend: Friend, message: Message) => ({ type: ADD_MESSAGE, payload: { friend, message } });
-
-type UserAction = ReturnType<typeof addFriend> | ReturnType<typeof addMessage>;
-
-type UserState = {
+export interface FriendState {
   username: string;
-  messages: {
-    [arg0: string]: Array<Message>;
-  };
-  friends: Array<Friend>;
-};
+}
 
-const initialState = {
+export interface UserState {
+  username: string;
+  selectedFriend: FriendState;
+  messages: {
+    [arg0: string]: Array<MessageState>;
+  };
+  friends: Array<FriendState>;
+}
+
+const initialState: UserState = {
   username: 'Me',
+  selectedFriend: {
+    username: '',
+  },
   messages: {
     user1: [
       {
@@ -189,20 +185,23 @@ const initialState = {
   ],
 };
 
-function user(state: UserState = initialState, action: UserAction): UserState {
-  switch (action.type) {
-    case ADD_FRIEND:
-      return produce(state, (draft) => {
-        draft.friends.push(action.payload);
-        draft.messages[action.payload.username] = [];
-      });
-    case ADD_MESSAGE:
-      return produce(state, (draft) => {
-        draft.messages[action.payload.friend.username].push(action.payload.message);
-      });
-    default:
-      return state;
-  }
-}
+const userSlice = createSlice({
+  name: 'user',
+  initialState,
+  reducers: {
+    addFriend(state, action: PayloadAction<FriendState>) {
+      state.friends.push(action.payload);
+      state.messages[action.payload.username] = [];
+    },
+    addMessage(state, action: PayloadAction<{ friend: FriendState; message: MessageState }>) {
+      state.messages[action.payload.friend.username].push(action.payload.message);
+    },
+    selectFriend(state, action: PayloadAction<string>) {
+      state.selectedFriend.username = action.payload;
+    },
+  },
+});
 
-export default user;
+export const { addFriend, addMessage, selectFriend } = userSlice.actions;
+
+export default userSlice;

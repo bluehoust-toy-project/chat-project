@@ -3,11 +3,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import rootReducer from './modules';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-
-const store = createStore(rootReducer);
+import store from './modules';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(

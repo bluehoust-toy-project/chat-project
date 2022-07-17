@@ -7,7 +7,7 @@ interface MessageProps {
   content: string;
 }
 
-const Message = ({ fromMe, content }: MessageProps) => {
+const MessageBox = ({ fromMe, content }: MessageProps) => {
   return (
     <div css={messageStyle}>
       <div className={classNames('wrap', { fromMe })}>
@@ -38,4 +38,4 @@ const messageStyle = css`
   }
 `;
 
-export default Message;
+export default MessageBox;

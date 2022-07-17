@@ -5,15 +5,15 @@ import { Grid } from '@mui/material';
 
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../modules';
-import { addMessage } from '../modules/user';
-import Friend from './Friend';
+import { RootState, useAppSelector } from '../modules';
+import { addMessage } from '../modules/userSlice';
+import FriendBox from './FriendBox';
 
-import Message from './Message';
+import MessageBox from './MessageBox';
 
-const Chat = () => {
+const ChatBox = () => {
   const dispatch = useDispatch();
-  const selectedFriend = useSelector((state: RootState) => state.friend);
+  const selectedFriend = useAppSelector((state) => state.user.selectedFriend);
   const user = useSelector((state: RootState) => state.user);
   const [message, setMessage] = useState('');
 
@@ -24,7 +24,7 @@ const Chat = () => {
         to: selectedFriend.username,
         content: message,
       };
-      dispatch(addMessage(selectedFriend, newMessage));
+      dispatch(addMessage({ friend: selectedFriend, message: newMessage }));
       setMessage('');
     }
   };
@@ -41,12 +41,12 @@ const Chat = () => {
   return (
     <Grid style={{ backgroundColor: 'white', height: '95vh' }} item xs={10}>
       <>
-        <div css={chatUserStyle}>{selectedFriend.username && <Friend username={selectedFriend.username} />}</div>
+        <div css={chatUserStyle}>{selectedFriend.username && <FriendBox friend={selectedFriend} />}</div>
         <div css={chatContentStyle}>
           <>
             {user.messages[selectedFriend.username] &&
               user.messages[selectedFriend.username].map((messageInfo, idx) => (
-                <Message key={idx} fromMe={messageInfo.from === user.username} content={messageInfo.content} />
+                <MessageBox key={idx} fromMe={messageInfo.from === user.username} content={messageInfo.content} />
               ))}
           </>
         </div>
@@ -96,4 +96,4 @@ const chatInputStyle = css`
   }
 `;
 
-export default Chat;
+export default ChatBox;

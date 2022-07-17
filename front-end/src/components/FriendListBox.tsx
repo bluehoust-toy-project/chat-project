@@ -5,17 +5,14 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, TextField } from '@mui/material';
 
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { addFriend } from '../modules/user';
+import { useAppDispatch, useAppSelector } from '../modules';
+import { addFriend } from '../modules/userSlice';
 
-import Friend from './Friend';
+import FriendBox from './FriendBox';
 
-interface FriendListProps {
-  friends: Array<{ username: string }>;
-}
-
-const FriendList = ({ friends }: FriendListProps) => {
-  const dispatch = useDispatch();
+const FriendListBox = () => {
+  const dispatch = useAppDispatch();
+  const friends = useAppSelector((state) => state.user.friends);
   const [username, setUsername] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);
 
@@ -40,7 +37,7 @@ const FriendList = ({ friends }: FriendListProps) => {
   return (
     <Grid style={{ backgroundColor: 'none' }} item xs={2}>
       <div>Friend List</div>
-      {friends && friends.map((friend, idx) => <Friend key={idx} username={friend.username} />)}
+      {friends && friends.map((friend, idx) => <FriendBox key={idx} friend={friend} />)}
       <button css={buttonStyle} onClick={() => setOpen(true)}>
         <div>
           <PersonAddIcon />
@@ -86,4 +83,4 @@ const buttonStyle = css`
   }
 `;
 
-export default FriendList;
+export default FriendListBox;

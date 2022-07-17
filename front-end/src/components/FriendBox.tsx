@@ -3,15 +3,15 @@ import { css } from '@emotion/react';
 import { Avatar } from '@mui/material';
 
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { selectFriend } from '../modules/friend';
+import { useAppDispatch } from '../modules';
+import { FriendState, selectFriend } from '../modules/userSlice';
 
 interface FriendProps {
-  username: string;
+  friend: FriendState;
 }
 
-const Friend = ({ username }: FriendProps) => {
-  const dispatch = useDispatch();
+const FriendBox = ({ friend }: FriendProps) => {
+  const dispatch = useAppDispatch();
 
   function stringToColor(string: string) {
     let hash = 0;
@@ -43,14 +43,14 @@ const Friend = ({ username }: FriendProps) => {
   return (
     <div css={friendStyle}>
       <div style={{ margin: '0 10px' }}>
-        <Avatar {...stringAvatar(username)} />
+        <Avatar {...stringAvatar(friend.username)} />
       </div>
       <div
         style={{ fontSize: '1.3rem', cursor: 'pointer' }}
         className="friend-username"
         onClick={(e: React.MouseEvent<HTMLDivElement>) => dispatch(selectFriend(e.currentTarget.innerHTML))}
       >
-        {username}
+        {friend.username}
       </div>
     </div>
   );
@@ -63,4 +63,4 @@ const friendStyle = css`
   margin: 5px 0;
 `;
 
-export default Friend;
+export default FriendBox;

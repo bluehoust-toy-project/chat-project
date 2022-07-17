@@ -8,11 +8,10 @@ import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined
 import SearchIcon from '@mui/icons-material/Search';
 
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../modules';
+import { useAppSelector } from '../modules';
 
 const Header = () => {
-  const friends = useSelector((state: RootState) => state.user.friends);
+  const friends = useAppSelector((state) => state.user.friends);
   const [username, setUsername] = useState<string>('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value);
